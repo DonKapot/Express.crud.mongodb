@@ -1,0 +1,25 @@
+extends userLayout.pug
+block userContent
+  h1= title
+  p Welcome to #{title}
+  p Users:
+  ul.list-u
+   each obj in data
+    li 
+     p 
+      span ID: 
+      span= obj.id
+     p
+      span NAME: 
+      span= obj.name
+     p
+      span Age: 
+      span= obj.age
+     p
+      span Good: 
+      span= obj.goodOne ? 'Good one' : 'Bad One'
+  - var n = 0;
+    div.pagination
+     while n < pages
+       - n++
+       a(href='?page='+n)= n

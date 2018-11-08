@@ -1,0 +1,32 @@
+extends userLayout.pug
+block userContent
+  h1= title
+  p Welcome to #{title}
+  form(method="post")
+   p
+    label(for='name') Enter Name to UPDATE
+    br
+    input(name='name' id='name' list='users') 
+    |
+    datalist(id='users')
+     each obj in data
+      option(value=`${obj.name}_/${obj._id}`)
+   p
+    label(for='newName') Enter New Name
+    br
+    input(name='newName' id='newName') 
+    |
+   p
+    label(for='newAge') Enter New Age
+    br
+    input(name='newAge' id='newAge' type='number') 
+    |
+   p
+    label(for='newGood') Enter New GoodOrBad
+    br
+    select(name='newGood' id='newGood') 
+     option(value='true') Good
+     option(value='false') Bad 
+   p
+    input(type='submit')
+    |
