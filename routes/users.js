@@ -3,9 +3,6 @@ var router = express.Router();
 var path = require('path');
 var fs = require( 'fs' );
 
-var dataObj = require('../data/data');
-var data = JSON.parse(dataObj.data);
-
 const db = require('../config/db');
  
 const {ObjectId} = require('mongodb');
