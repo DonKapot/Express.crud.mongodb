@@ -1,16 +1,17 @@
 extends userLayout.pug
 block userContent
-  h1= title
-  p Welcome to #{title}
-  form(method="post")
-   p
-    label(for='name') Enter Name to UPDATE
-    br
-    input(name='name' id='name' list='users') 
-    |
-    datalist(id='users')
-     each obj in data
-      option(value=`${obj.name}_/${obj._id}`)
-   p
-    input(type='submit')
-    |
+  div.user-delete
+    h1= title
+    p Welcome to #{title}
+    form(method="post")
+    p
+      label(for='name') Enter Name to UPDATE
+      br
+      input(name='name' id='name' list='users') 
+      |
+      datalist(id='users')
+      each obj in data
+        option(value=`${obj.name}_/${obj._id}`)
+    p
+      input(type='submit')
+      |

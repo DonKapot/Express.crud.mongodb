@@ -1,24 +1,25 @@
 extends userLayout.pug
 block userContent
-  h1= title
-  p Welcome to #{title}
-  form(method="post")
-   p
-    label(for='name') Enter New Name
-    br
-    input(name='name' id='name') 
-    |
-   p
-    label(for='age') Enter Age
-    br
-    input(name='age' id='age' type='number') 
-    |
-   p 
-    label(for='goodi') Enter Good or Bad
-    br
-    select(name='goodi' id='goodi')
-     option(value='true') Good
-     option(value='false') Bad
-   p
-    input(type='submit')
-    |
+  div.user-create
+    h1= title
+    p Welcome to #{title}
+    form(method="post")
+      p.form-group
+        label(for='name') Enter New Name
+        br
+        input(name='name' id='name') 
+        |
+      p.form-group
+        label(for='age') Enter Age
+        br
+        input(name='age' id='age' type='number') 
+        |
+      p.form-group
+        label(for='goodi') Enter Good or Bad
+        br
+        select(name='goodi' id='goodi')
+          option(value='true') Good
+          option(value='false') Bad
+      p.form-group
+        input(type='submit')
+        |

@@ -18,15 +18,17 @@ router.get('/', function(req, res, next) {
 router.get('/all', function(req, res, next) {				 
 	db().then(db=>{
 		db.collection('users')
-		.find({})
-		.project({_id: 0, name: 1, age: 1, goodOne: 1})
+		.aggregate([
+			{ $project: {_id: 0, name: 1, age: 1, goodOne: 1} },
+			{ $sort: {name: 1} }
+		])
 		.toArray((_err, _users) => {
 			let page = req.query.page;
 			let minItem = (page-1)*5;
 			let maxItem = page*5;
 			let dataLen = _users.length<5?1:_users.length%5===0&&_users.length>=5?_users.length/5:Math.round((_users.length+2)/5);
 	 		let _usersAll = _users.map((u,i)=>Object.assign(u,{id:++i}));
-	 		console.log(_usersAll);
+	 		// console.log(_usersAll);
 	      	if (_err){res.render(_err);}
 			
 			if(page===undefined) {
@@ -51,6 +53,7 @@ router.get('/all', function(req, res, next) {
 router.get('/new', function(req, res, next) {
   res.render('users/userCreate', {title: 'New user:'});
 });
+
 router.post('/new', function(req, res, next) {
 	db().then(db=>{
 		db.collection('users').insert({
@@ -72,18 +75,36 @@ router.get('/up', function(req, res, next) {
 	    });
 	});
 });
+
 router.post('/up', function(req, res, next) {
-	const oldName = req.body.name.split('_/')[0];
-	const userID = req.body.name.split('_/')[1];
-	const myquery = {_id: new ObjectId(userID)};
-	const newvalues = {$set: {name: req.body.newName, age: req.body.newAge, goodOne: req.body.newGood} };
-	db().then(db=>{
-		db.collection('users').update(myquery, newvalues, function(err, ress) {
-			if (err) throw err;
-			console.log(ress.result.nModified + " document updated");
-		});
-	});	
-	res.send("<h1><a href='/users/all'>Back to users</a></h1>");
+	let { name: oldNameID, newName: name, newAge: age, newGood: goodOne} = req.body;
+
+	if(age||name){
+		const oldName = oldNameID.split('_/')[0];
+		const userID = oldNameID.split('_/')[1];
+		const myquery = {_id: new ObjectId(userID)};
+		let objVal = {};
+		Object.assign(objVal, {goodOne});
+		let newvalues = {$set: objVal };
+
+		if(name){
+			Object.assign(objVal, {name});
+		}
+		if(age){
+			Object.assign(objVal, {age});
+		}
+		// console.log(newvalues);
+		db().then(db=>{
+			db.collection('users').update(myquery, newvalues, function(err, ress) {
+				if (err) throw err;
+				console.log(ress.result.nModified + " document updated");
+			});
+		});	
+		res.send("<h1><a href='/users/all'>Back to users</a></h1>");
+	}
+	else {
+		res.send("<h1><a href='/users'>Error! Send empty values!!! Back to users</a></h1>");
+	}
 });
 // -----------------------------------------------------------------------------------
 router.get('/del', function(req, res, next) {
@@ -96,6 +117,7 @@ router.get('/del', function(req, res, next) {
 	    });
 	});
 });
+
 router.post('/del', function(req, res, next) {
 	const userID = req.body.name.split('_/')[1];
 	db().then(db=>{
